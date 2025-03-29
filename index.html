@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Control ESP8266 via MQTT</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.1.0/paho-mqtt.min.js"></script>
+</head>
+<body>
+    <h1>Control del ESP8266 con MQTT</h1>
+    <button onclick="sendMQTT('on')">Encender LED</button>
+    <button onclick="sendMQTT('off')">Apagar LED</button>
+
+    <script>
+        const clientId = "web_" + Math.random().toString(16).substr(2, 8);
+        const host = "ws://test.mosquitto.org:8080"; // WebSocket (para navegador)
+        const topic = "casa/led";
+
+        const client = new Paho.MQTT.Client(host, clientId);
+
+        function sendMQTT(message) {
+            const payload = new Paho.MQTT.Message(message);
+            payload.destinationName = topic;
+            client.send(payload);
+            console.log("Enviado: " + message);
+        }
+
+        // Conexión al broker
+        client.connect({
+            onSuccess: () => {
+                console.log("Conectado al broker MQTT");
+            },
+            onFailure: (err) => {
+                console.error("Error de conexión:", err.errorMessage);
+            }
+        });
+    </script>
+</body>
+</html>
