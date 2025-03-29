@@ -2,7 +2,8 @@
 <html>
 <head>
     <title>Control ESP8266 via MQTT</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.1.0/paho-mqtt.min.js"></script>
+    <!-- Carga Paho MQTT desde un CDN confiable -->
+    <script src="https://cdn.jsdelivr.net/npm/paho-mqtt@1.2.0/paho-mqtt-min.js"></script>
 </head>
 <body>
     <h1>Control del ESP8266 con MQTT</h1>
@@ -10,16 +11,18 @@
     <button onclick="sendMQTT('off')">Apagar LED</button>
 
     <script>
+        // Configuración MQTT
         const clientId = "web_" + Math.random().toString(16).substr(2, 8);
-        const host = "wss://test.mosquitto.org:8081";  // WebSocket seguro
-        const topic = "casa/led";  // ¡Mismo tópico que en el ESP8266!
+        const host = "wss://test.mosquitto.org:8081"; // WebSocket seguro
+        const topic = "casa/led"; // Mismo tópico que en el ESP8266
 
-        const client = new Paho.MQTT.Client(host, clientId);
+        // Inicializa el cliente MQTT
+        const client = new Paho.Client(host, clientId); // ¡Ojo! Es "Paho.Client", no "Paho.MQTT.Client"
 
         function sendMQTT(message) {
-            const payload = new Paho.MQTT.Message(message);
-            payload.destinationName = topic;
-            client.send(payload);
+            const messageObj = new Paho.Message(message); // ¡Ojo! Es "Paho.Message", no "Paho.MQTT.Message"
+            messageObj.destinationName = topic;
+            client.send(messageObj);
             console.log("Enviado: " + message);
         }
 
