@@ -11,8 +11,8 @@
 
     <script>
         const clientId = "web_" + Math.random().toString(16).substr(2, 8);
-        const host = "ws://test.mosquitto.org:8080"; // WebSocket (para navegador)
-        const topic = "casa/led";
+        const host = "wss://test.mosquitto.org:8081";  // WebSocket seguro
+        const topic = "casa/led";  // ¡Mismo tópico que en el ESP8266!
 
         const client = new Paho.MQTT.Client(host, clientId);
 
